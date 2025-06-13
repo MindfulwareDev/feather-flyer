@@ -13,6 +13,10 @@ let lift = -6;
 let pipes = [];
 let score = 0;
 let highScore = 0;
+let topScores = [];
+let gameOver = false;
+let successSound;
+let highScore = 0;
 let successSound;
 let difficulty = 'slow';
 let gameSpeed = 2;
@@ -47,6 +51,13 @@ document.addEventListener('keydown', flap);
 canvas.addEventListener('click', flap);
 
 function resetGame() {
+  gameOver = true;
+  topScores.push(score);
+  topScores = [...new Set(topScores)].sort((a, b) => b - a).slice(0, 5);
+  document.getElementById('gameOverScreen').style.display = 'block';
+  const list = document.getElementById('topScoresList');
+  list.innerHTML = topScores.map(s => `<li>${s}</li>`).join('');
+}
   birdY = canvas.height / 2;
   birdV = 0;
   score = 0;
@@ -137,9 +148,20 @@ function gameLoop() {
   checkCollision();
   drawScore();
 
-  requestAnimationFrame(gameLoop);
+  if (!gameOver) requestAnimationFrame(gameLoop);
 }
 
 loadAssets();
 setDifficulty('slow');
 gameLoop();
+
+
+function restartGame() {
+  birdY = canvas.height / 2;
+  birdV = 0;
+  score = 0;
+  pipes = [];
+  gameOver = false;
+  document.getElementById('gameOverScreen').style.display = 'none';
+  gameLoop();
+}

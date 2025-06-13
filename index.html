@@ -15,5 +15,12 @@
     <button onclick="setDifficulty('high')">High</button>
   </div>
   <script src="script.js"></script>
+
+<div id="gameOverScreen" style="display:none; position: absolute; top: 30%; left: 10%; right: 10%; background: rgba(0,0,0,0.8); padding: 20px; color: white; border-radius: 10px;">
+  <h2>Game Over</h2>
+  <p>Your Top Scores:</p>
+  <ul id="topScoresList"></ul>
+  <button onclick="restartGame()">Restart</button>
+</div>
 </body>
 </html>
