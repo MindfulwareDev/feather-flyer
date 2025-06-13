@@ -12,6 +12,8 @@ let gravity = 0.1;
 let lift = -6;
 let pipes = [];
 let score = 0;
+let level = 1;
+let powerUps = [];
 let highScore = 0;
 let topScores = [];
 let gameOver = false;
@@ -19,11 +21,13 @@ let successSound;
 let backgroundMusic;
 let menuVisible = true;
 let paused = false;
+let darkMode = false;
 let highScore = 0;
 let successSound;
 let backgroundMusic;
 let menuVisible = true;
 let paused = false;
+let darkMode = false;
 let difficulty = 'slow';
 let gameSpeed = 2;
 let flapSound, crashSound, birdImage;
@@ -118,6 +122,10 @@ function updatePipes() {
     successSound.play();
     if (score > highScore) highScore = score;
       score++;
+    if (score % 5 === 0) level++;
+    if (Math.random() < 0.2) {
+      powerUps.push({ x: canvas.width, y: Math.random() * canvas.height });
+    }
     }
   }
 }
@@ -142,7 +150,7 @@ function checkCollision() {
 function drawScore() {
   ctx.fillStyle = "#fff";
   ctx.font = "20px sans-serif";
-  ctx.fillText("Score: " + score + " | High: " + highScore, 10, 25);
+  ctx.fillText(`Score: ${score} | High: ${highScore} | Level: ${level}`, 10, 25);
 }
 
 function gameLoop() {
@@ -152,8 +160,10 @@ function gameLoop() {
 
   drawBird();
   updatePipes();
+  updatePowerUps();
   drawPipes();
   checkCollision();
+  drawPowerUps();
   drawScore();
 
   if (!gameOver && !menuVisible && !paused) requestAnimationFrame(gameLoop);
@@ -226,5 +236,33 @@ function toggleFullScreen() {
     });
   } else {
     document.exitFullscreen();
+  }
+}
+
+
+function toggleDarkMode() {
+  darkMode = !darkMode;
+  document.body.classList.toggle("dark", darkMode);
+}
+
+
+function drawPowerUps() {
+  ctx.fillStyle = "gold";
+  powerUps.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+    ctx.fill();
+  });
+}
+
+function updatePowerUps() {
+  for (let i = powerUps.length - 1; i >= 0; i--) {
+    powerUps[i].x -= gameSpeed;
+    if (powerUps[i].x + 6 < 0) powerUps.splice(i, 1);
+    else if (50 < powerUps[i].x + 6 && 50 + 34 > powerUps[i].x &&
+             birdY < powerUps[i].y + 6 && birdY + 24 > powerUps[i].y - 6) {
+      score += 3;
+      powerUps.splice(i, 1);
+    }
   }
 }
