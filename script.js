@@ -6,10 +6,14 @@ canvas.height = 480;
 
 let birdY = canvas.height / 2;
 let birdV = 0;
+let flapState = true;
+let floatingTexts = [];
 let gravity = 0.1;
 let lift = -6;
 let pipes = [];
 let score = 0;
+let highScore = 0;
+let successSound;
 let difficulty = 'slow';
 let gameSpeed = 2;
 let flapSound, crashSound, birdImage;
@@ -19,6 +23,7 @@ function loadAssets() {
   birdImage.src = 'assets/bird.png';
   flapSound = new Audio('assets/flap.wav');
   crashSound = new Audio('assets/crash.wav');
+  successSound = new Audio('assets/success.wav');
 }
 
 function setDifficulty(level) {
@@ -49,6 +54,23 @@ function resetGame() {
 }
 
 function drawBird() {
+  flapState = !flapState;
+  const wingOffset = flapState ? 0 : 4;
+  ctx.save();
+  ctx.translate(50, birdY);
+  ctx.drawImage(birdImage, 0, wingOffset, 34, 24, 0, 0, 34, 24);
+  ctx.restore();
+
+  for (let i = floatingTexts.length - 1; i >= 0; i--) {
+    const t = floatingTexts[i];
+    ctx.fillStyle = "yellow";
+    ctx.font = "bold 16px sans-serif";
+    ctx.fillText(t.text, t.x, t.y);
+    t.y -= 1;
+    t.alpha -= 0.01;
+    if (t.alpha <= 0) floatingTexts.splice(i, 1);
+  }
+}
   ctx.drawImage(birdImage, 50, birdY, 34, 24);
 }
 
@@ -73,6 +95,9 @@ function updatePipes() {
 
     if (pipes[i].x + 40 < 0) {
       pipes.splice(i, 1);
+    floatingTexts.push({ text: "+1", x: 60, y: birdY - 10, alpha: 1 });
+    successSound.play();
+    if (score > highScore) highScore = score;
       score++;
     }
   }
@@ -98,7 +123,7 @@ function checkCollision() {
 function drawScore() {
   ctx.fillStyle = "#fff";
   ctx.font = "20px sans-serif";
-  ctx.fillText("Score: " + score, 10, 25);
+  ctx.fillText("Score: " + score + " | High: " + highScore, 10, 25);
 }
 
 function gameLoop() {
