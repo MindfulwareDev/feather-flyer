@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<div id="birdSelect" style="margin-bottom: 20px;">
+  <p>Select Your Bird:</p>
+  <button onclick="selectBird('bird')">Classic</button>
+  <button onclick="selectBird('bird2')">Red</button>
+  <button onclick="selectBird('bird3')">Blue</button>
+</div>
 <div id="mainMenu" style="position:absolute;top:30%;left:10%;right:10%;text-align:center;background:rgba(0,0,0,0.85);padding:20px;color:white;border-radius:10px;">
   <h1>Feather Flyer</h1>
   <p>Flap through the gates and beat your high score!</p>
@@ -31,7 +37,14 @@
   <h2>Game Over</h2>
   <p>Your Top Scores:</p>
   <ul id="topScoresList"></ul>
+  <p>Leaderboard (All Time):</p>
+  <ul id="leaderboardList"></ul>
   <button onclick="restartGame()">Restart</button>
+  <div style="margin-top:10px;">
+    <p>Share Your Score:</p>
+    <button onclick="shareToTwitter()">Twitter</button>
+    <button onclick="shareToFacebook()">Facebook</button>
+  </div>
 </div>
 <footer style="text-align:center; color:#fff; padding:10px; font-size:12px;">
   © 2025 <a href="https://Mindfulware.com" target="_blank" style="color:#fff;">Mindfulware.com</a>. All rights reserved.

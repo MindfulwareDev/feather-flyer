@@ -14,8 +14,10 @@ let pipes = [];
 let score = 0;
 let level = 1;
 let powerUps = [];
+let powerUpPhase = 0;
 let highScore = 0;
 let topScores = [];
+let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
 let gameOver = false;
 let successSound;
 let backgroundMusic;
@@ -34,6 +36,7 @@ let flapSound, crashSound, birdImage;
 
 function loadAssets() {
   birdImage = new Image();
+  birdImage.src = `assets/${selectedBird}.png`;
   birdImage.src = 'assets/bird.png';
   flapSound = new Audio('assets/flap.wav');
   crashSound = new Audio('assets/crash.wav');
@@ -66,9 +69,14 @@ function resetGame() {
   gameOver = true;
   topScores.push(score);
   topScores = [...new Set(topScores)].sort((a, b) => b - a).slice(0, 5);
+  leaderboard.push(score);
+  leaderboard = [...new Set(leaderboard)].sort((a, b) => b - a).slice(0, 5);
+  localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
   document.getElementById('gameOverScreen').style.display = 'block';
   const list = document.getElementById('topScoresList');
   list.innerHTML = topScores.map(s => `<li>${s}</li>`).join('');
+  const leaderList = document.getElementById('leaderboardList');
+  leaderList.innerHTML = leaderboard.map(s => `<li>${s}</li>`).join('');
 }
   birdY = canvas.height / 2;
   birdV = 0;
@@ -165,11 +173,15 @@ function gameLoop() {
   checkCollision();
   drawPowerUps();
   drawScore();
+  powerUpPhase += 0.05;
 
   if (!gameOver && !menuVisible && !paused) requestAnimationFrame(gameLoop);
 }
 
-loadAssets();
+function selectBird(birdName) {
+  selectedBird = birdName;
+  birdImage.src = `assets/${selectedBird}.png`;
+}
 setDifficulty('slow');
 gameLoop();
 
@@ -250,6 +262,8 @@ function drawPowerUps() {
   ctx.fillStyle = "gold";
   powerUps.forEach(p => {
     ctx.beginPath();
+    const offset = Math.sin(powerUpPhase + p.x * 0.01) * 3;
+    p.y += offset;
     ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
     ctx.fill();
   });
@@ -265,4 +279,16 @@ function updatePowerUps() {
       powerUps.splice(i, 1);
     }
   }
+}
+
+
+function shareToTwitter() {
+  const text = encodeURIComponent(`I scored ${score} in Feather Flyer! Try to beat me!`);
+  const url = encodeURIComponent("https://mindfulwaredev.github.io/feather-flyer/");
+  window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+}
+
+function shareToFacebook() {
+  const url = encodeURIComponent("https://mindfulwaredev.github.io/feather-flyer/");
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
 }
