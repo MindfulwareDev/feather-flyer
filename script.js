@@ -93,6 +93,7 @@ function resetGame() {
   leaderboard = [...new Set(leaderboard)].sort((a, b) => b - a).slice(0, 5);
   localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
   document.getElementById('gameOverScreen').style.display = 'block';
+  saveGameState();
   const badgeList = document.getElementById('achievementBadges');
   badgeList.innerHTML = achievements.map(a => `<li>🏅 ${a}</li>`).join('');
   const list = document.getElementById('topScoresList');
@@ -153,8 +154,14 @@ function updatePipes() {
     if (score > highScore) highScore = score;
 
     // Achievements
-    if (score >= 10 && !achievements.includes('Scored 10')) achievements.push('Scored 10');
-    if (score >= 25 && !achievements.includes('Scored 25')) achievements.push('Scored 25');
+    if (score >= 10 && !achievements.includes('Scored 10')) {
+      achievements.push('Scored 10');
+      unlockedBirds.add('bird2');
+    }
+    if (score >= 25 && !achievements.includes('Scored 25')) {
+      achievements.push('Scored 25');
+      unlockedBirds.add('bird3');
+    }
     if (score >= 50 && !achievements.includes('Scored 50')) achievements.push('Scored 50');
       score++;
     if (score % 5 === 0) level++;
@@ -318,4 +325,27 @@ function shareToTwitter() {
 function shareToFacebook() {
   const url = encodeURIComponent("https://mindfulwaredev.github.io/feather-flyer/");
   window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+}
+
+
+function saveGameState() {
+  const state = {
+    highScore,
+    leaderboard,
+    achievements,
+    selectedBird,
+    unlockedBirds: Array.from(unlockedBirds)
+  };
+  localStorage.setItem("featherFlyerSave", JSON.stringify(state));
+}
+
+function loadGameState() {
+  const saved = JSON.parse(localStorage.getItem("featherFlyerSave"));
+  if (saved) {
+    highScore = saved.highScore || 0;
+    leaderboard = saved.leaderboard || [];
+    achievements = saved.achievements || [];
+    selectedBird = saved.selectedBird || 'bird';
+    unlockedBirds = new Set(saved.unlockedBirds || ['bird']);
+  }
 }
