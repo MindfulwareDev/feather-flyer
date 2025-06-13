@@ -6,7 +6,7 @@ canvas.height = 480;
 
 let birdY = canvas.height / 2;
 let birdV = 0;
-let gravity = 0.4;
+let gravity = 0.2;
 let lift = -8;
 let pipes = [];
 let score = 0;
@@ -22,10 +22,15 @@ function loadAssets() {
 }
 
 function setDifficulty(level) {
+  if (level === 'easy') {
+    gameSpeed = 0.8;
+    gravity = 0.15;
+    return;
+  }
   difficulty = level;
-  if (level === 'slow') gameSpeed = 2;
-  else if (level === 'medium') gameSpeed = 3;
-  else if (level === 'high') gameSpeed = 4;
+  if (level === 'slow') gameSpeed = 1;
+  else if (level === 'medium') gameSpeed = 1.5;
+  else if (level === 'high') gameSpeed = 2;
 }
 
 function flap() {
