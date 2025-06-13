@@ -24,4 +24,3 @@ Play it here: [https://yourusername.github.io/feather-flyer](https://yourusernam
    ```bash
    git clone https://github.com/yourusername/feather-flyer.git
    cd feather-flyer
-
