@@ -16,8 +16,12 @@ let highScore = 0;
 let topScores = [];
 let gameOver = false;
 let successSound;
+let backgroundMusic;
+let menuVisible = true;
 let highScore = 0;
 let successSound;
+let backgroundMusic;
+let menuVisible = true;
 let difficulty = 'slow';
 let gameSpeed = 2;
 let flapSound, crashSound, birdImage;
@@ -28,6 +32,8 @@ function loadAssets() {
   flapSound = new Audio('assets/flap.wav');
   crashSound = new Audio('assets/crash.wav');
   successSound = new Audio('assets/success.wav');
+  backgroundMusic = new Audio('assets/music.wav');
+  backgroundMusic.loop = true;
 }
 
 function setDifficulty(level) {
@@ -148,7 +154,7 @@ function gameLoop() {
   checkCollision();
   drawScore();
 
-  if (!gameOver) requestAnimationFrame(gameLoop);
+  if (!gameOver && !menuVisible) requestAnimationFrame(gameLoop);
 }
 
 loadAssets();
@@ -157,6 +163,9 @@ gameLoop();
 
 
 function restartGame() {
+  resetGameInternal();
+  gameLoop();
+}
   birdY = canvas.height / 2;
   birdV = 0;
   score = 0;
@@ -164,4 +173,22 @@ function restartGame() {
   gameOver = false;
   document.getElementById('gameOverScreen').style.display = 'none';
   gameLoop();
+}
+
+
+function startGame() {
+  menuVisible = false;
+  document.getElementById('mainMenu').style.display = 'none';
+  backgroundMusic.play();
+  resetGameInternal();
+  gameLoop();
+}
+
+function resetGameInternal() {
+  birdY = canvas.height / 2;
+  birdV = 0;
+  score = 0;
+  pipes = [];
+  gameOver = false;
+  document.getElementById('gameOverScreen').style.display = 'none';
 }
