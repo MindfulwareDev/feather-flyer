@@ -42,6 +42,7 @@ function loadAssets() {
     img.src = `assets/${name}.png`;
     birdImages[name] = img;
   });
+  // Assign selected bird image after loading
   birdImage = birdImages[selectedBird];
 
   soundEffects.flap = new Audio('assets/flap.wav');
@@ -56,6 +57,7 @@ function loadAssets() {
   backgroundMusic = soundEffects.music;
 
   birdImage = new Image();
+  // Assign selected bird image after loading
   birdImage = birdImages[selectedBird];
   birdImage.src = 'assets/bird.png';
   flapSound = new Audio('assets/flap.wav');
@@ -214,6 +216,7 @@ function gameLoop() {
 
 function selectBird(birdName) {
   selectedBird = birdName;
+  // Assign selected bird image after loading
   birdImage = birdImages[selectedBird];
 }
 setDifficulty('slow');
@@ -349,3 +352,6 @@ function loadGameState() {
     unlockedBirds = new Set(saved.unlockedBirds || ['bird']);
   }
 }
+
+loadGameState();
+loadAssets();
