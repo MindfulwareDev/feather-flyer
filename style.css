@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  background: #70c5ce url('assets/bg.png') repeat-x;
+  overflow: hidden;
+  font-family: sans-serif;
+  text-align: center;
+}
+#gameCanvas {
+  display: block;
+  margin: 0 auto;
+  background: transparent;
+}
+#controls {
+  margin-top: 10px;
+}
