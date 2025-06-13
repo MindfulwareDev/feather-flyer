@@ -6,8 +6,8 @@ canvas.height = 480;
 
 let birdY = canvas.height / 2;
 let birdV = 0;
-let gravity = 0.2;
-let lift = -8;
+let gravity = 0.1;
+let lift = -6;
 let pipes = [];
 let score = 0;
 let difficulty = 'slow';
@@ -64,7 +64,7 @@ function drawPipes() {
 function updatePipes() {
   if (pipes.length === 0 || pipes[pipes.length - 1].x < canvas.width - 200) {
     const top = Math.random() * (canvas.height / 2);
-    const bottom = canvas.height - top - 100;
+    const bottom = canvas.height - top - 125;
     pipes.push({ x: canvas.width, top, bottom });
   }
 
