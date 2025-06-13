@@ -18,10 +18,12 @@ let gameOver = false;
 let successSound;
 let backgroundMusic;
 let menuVisible = true;
+let paused = false;
 let highScore = 0;
 let successSound;
 let backgroundMusic;
 let menuVisible = true;
+let paused = false;
 let difficulty = 'slow';
 let gameSpeed = 2;
 let flapSound, crashSound, birdImage;
@@ -154,7 +156,7 @@ function gameLoop() {
   checkCollision();
   drawScore();
 
-  if (!gameOver && !menuVisible) requestAnimationFrame(gameLoop);
+  if (!gameOver && !menuVisible && !paused) requestAnimationFrame(gameLoop);
 }
 
 loadAssets();
@@ -191,4 +193,20 @@ function resetGameInternal() {
   pipes = [];
   gameOver = false;
   document.getElementById('gameOverScreen').style.display = 'none';
+}
+
+
+function togglePause() {
+  paused = !paused;
+  if (!paused) {
+    gameLoop();
+  }
+}
+
+function setVolume(value) {
+  const volume = parseFloat(value);
+  if (backgroundMusic) backgroundMusic.volume = volume;
+  if (flapSound) flapSound.volume = volume;
+  if (crashSound) crashSound.volume = volume;
+  if (successSound) successSound.volume = volume;
 }

@@ -14,6 +14,10 @@
 </div>
   <canvas id="gameCanvas"></canvas>
   <div id="controls">
+  <button onclick="togglePause()">Pause/Resume</button>
+  <label style="margin-left:10px;">Volume:
+    <input type="range" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)">
+  </label>
     <button onclick="setDifficulty('easy')">Easy</button>
     <button onclick="setDifficulty('slow')">Slow</button>
     <button onclick="setDifficulty('medium')">Medium</button>
@@ -27,5 +31,8 @@
   <ul id="topScoresList"></ul>
   <button onclick="restartGame()">Restart</button>
 </div>
+<footer style="text-align:center; color:#fff; padding:10px; font-size:12px;">
+  © 2025 <a href="https://Mindfulware.com" target="_blank" style="color:#fff;">Mindfulware.com</a>. All rights reserved.
+</footer>
 </body>
 </html>
