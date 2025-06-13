@@ -17,6 +17,7 @@ let powerUps = [];
 let powerUpPhase = 0;
 let highScore = 0;
 let topScores = [];
+let achievements = [];
 let leaderboard = JSON.parse(localStorage.getItem('leaderboard') || '[]');
 let gameOver = false;
 let successSound;
@@ -35,8 +36,27 @@ let gameSpeed = 2;
 let flapSound, crashSound, birdImage;
 
 function loadAssets() {
+  const birdList = ['bird', 'bird2', 'bird3'];
+  birdList.forEach(name => {
+    const img = new Image();
+    img.src = `assets/${name}.png`;
+    birdImages[name] = img;
+  });
+  birdImage = birdImages[selectedBird];
+
+  soundEffects.flap = new Audio('assets/flap.wav');
+  soundEffects.crash = new Audio('assets/crash.wav');
+  soundEffects.success = new Audio('assets/success.wav');
+  soundEffects.music = new Audio('assets/music.wav');
+  soundEffects.music.loop = true;
+
+  flapSound = soundEffects.flap;
+  crashSound = soundEffects.crash;
+  successSound = soundEffects.success;
+  backgroundMusic = soundEffects.music;
+
   birdImage = new Image();
-  birdImage.src = `assets/${selectedBird}.png`;
+  birdImage = birdImages[selectedBird];
   birdImage.src = 'assets/bird.png';
   flapSound = new Audio('assets/flap.wav');
   crashSound = new Audio('assets/crash.wav');
@@ -73,6 +93,8 @@ function resetGame() {
   leaderboard = [...new Set(leaderboard)].sort((a, b) => b - a).slice(0, 5);
   localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
   document.getElementById('gameOverScreen').style.display = 'block';
+  const badgeList = document.getElementById('achievementBadges');
+  badgeList.innerHTML = achievements.map(a => `<li>🏅 ${a}</li>`).join('');
   const list = document.getElementById('topScoresList');
   list.innerHTML = topScores.map(s => `<li>${s}</li>`).join('');
   const leaderList = document.getElementById('leaderboardList');
@@ -129,6 +151,11 @@ function updatePipes() {
     floatingTexts.push({ text: "+1", x: 60, y: birdY - 10, alpha: 1 });
     successSound.play();
     if (score > highScore) highScore = score;
+
+    // Achievements
+    if (score >= 10 && !achievements.includes('Scored 10')) achievements.push('Scored 10');
+    if (score >= 25 && !achievements.includes('Scored 25')) achievements.push('Scored 25');
+    if (score >= 50 && !achievements.includes('Scored 50')) achievements.push('Scored 50');
       score++;
     if (score % 5 === 0) level++;
     if (Math.random() < 0.2) {
@@ -180,7 +207,7 @@ function gameLoop() {
 
 function selectBird(birdName) {
   selectedBird = birdName;
-  birdImage.src = `assets/${selectedBird}.png`;
+  birdImage = birdImages[selectedBird];
 }
 setDifficulty('slow');
 gameLoop();
