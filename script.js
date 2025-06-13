@@ -210,3 +210,21 @@ function setVolume(value) {
   if (crashSound) crashSound.volume = volume;
   if (successSound) successSound.volume = volume;
 }
+
+
+// Mobile touch input
+canvas.addEventListener('touchstart', function(e) {
+  e.preventDefault();
+  if (!menuVisible && !gameOver && !paused) flap();
+}, { passive: false });
+
+// Fullscreen toggle
+function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(err => {
+      alert(`Error attempting to enable full-screen mode: ${err.message}`);
+    });
+  } else {
+    document.exitFullscreen();
+  }
+}
